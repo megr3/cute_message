@@ -3,9 +3,9 @@
 
 <head>
     <title>Our Beautiful Mess ✨</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Life+Savers:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Life+Savers:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -29,6 +29,7 @@
           font-weight: 800;
           font-style: normal;
         }
+
         body, html {
             margin: 0;
             padding: 0;
@@ -292,25 +293,30 @@
                 submitButton.textContent = "Sending Note... ✨";
                 submitButton.disabled = true;
 
-                // BULLETPROOF SYSTEM UPDATE: Format parameters directly as standard URL Encoded strings 
-                // to completely bypass raw JSON formatting security locks across origins.
-                const formBodyParams = new URLSearchParams();
-                formBodyParams.append("name", userName);
-                formBodyParams.append("email", userEmail);
-                formBodyParams.append("place", userAddress);
-                formBodyParams.append("note", note);
-                formBodyParams.append("timestamp", new Date().getTime().toString());
+                const lovePackage = {
+                    name: userName,
+                    email: userEmail,
+                    place: userAddress,
+                    note: note,
+                    timestamp: new Date().getTime().toString()
+                };
 
-                fetch('http://127.0.0', {
-                    method: 'POST',
-                    mode: 'no-cors', 
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formBodyParams.toString()
+                // Transmits the payload directly to your shared public JSONBin data block
+                fetch('https://jsonbin.io', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': '$2b$10$w8bX1v0SshIcoZfeAepLxeBfK22vK9I6kF5H7wK6Fqgq1TzB9q8rS'
+                    },
+                    body: JSON.stringify(lovePackage)
                 })
-                .then(() => {
-                    // Success layout fires cleanly without listening to the restricted server body response
-                    messageForm.style.display = "none";
-                    document.getElementById("dynamicHeading").innerHTML = "✨✨✨<br>Message Sent ❤️<br>✨✨✨";
+                .then(response => {
+                    if (response.ok) {
+                        messageForm.style.display = "none";
+                        document.getElementById("dynamicHeading").innerHTML = "✨✨✨<br>Message Sent Straight to My Screen! ❤️<br>✨✨✨";
+                    } else {
+                        throw new Error();
+                    }
                 })
                 .catch(() => {
                     submitButton.textContent = "Error! Try Again 🥺";

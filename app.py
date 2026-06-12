@@ -2,14 +2,15 @@ import streamlit as st
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import os
-import json
+import requests
 import time
-import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import parse_qs
 
-# Set up browser layout dashboard configurations
-st.set_page_config(page_title="Live Love Letter Decoder 💖", page_icon="💌", layout="centered")
+# Configure core browser page window attributes
+st.set_page_config(
+    page_title="Live Love Letter Decoder 💖", 
+    page_icon="💌", 
+    layout="centered"
+)
 
 st.markdown("""
     <style>
@@ -34,70 +35,28 @@ status_message = st.empty()
 image_placeholder = st.empty()
 download_placeholder = st.empty()
 
-if "received_data" not in st.session_state:
-    st.session_state.received_data = None
-if "last_processed_time" not in st.session_state:
-    st.session_state.last_processed_time = None
+if "last_time" not in st.session_state:
+    st.session_state.last_time = None
 
 # ----------------------------------------------------------------------
-# LIGHTWEIGHT NATIVE PYTHON BACKGROUND HTTP PORT RECEIVER SERVER
+# LIVE REAL-TIME CLOUD PIPELINE WATCH ENGINE
 # ----------------------------------------------------------------------
-class LocalNoteReceiver(BaseHTTPRequestHandler):
-    def do_OPTIONS(self):
-        self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
-        self.end_headers()
-
-    def do_POST(self):
-        if self.path == '/receive_note':
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length).decode('utf-8')
-            
-            # SYSTEM PARSING FIX: Decode the incoming form-url data dictionary cleanly into Python keys
-            parsed_params = parse_qs(post_data)
-            
-            # Extract first indexed values from the dictionary array lists safely
-            compiled_payload = {
-                "name": parsed_params.get("name", ["Babe"])[0],
-                "email": parsed_params.get("email", ["Not Provided"])[0],
-                "place": parsed_params.get("place", ["Not Provided"])[0],
-                "note": parsed_params.get("note", [""])[0],
-                "timestamp": parsed_params.get("timestamp", [None])[0]
-            }
-            
-            st.session_state.received_data = compiled_payload
-            
-            self.send_response(200)
-            self.send_header('Access-Control-Allow-Origin', '*')
-            self.end_headers()
-
-def launch_receiver_background_node():
-    server_address = ('', 5000)
-    try:
-        httpd = HTTPServer(server_address, LocalNoteReceiver)
-        httpd.serve_forever()
-    except Exception as e:
-        pass
-
-if "receiver_thread_active" not in st.session_state:
-    st.session_state.receiver_thread_active = True
-    background_thread = threading.Thread(target=launch_receiver_background_node, daemon=True)
-    background_thread.start()
-
-# ----------------------------------------------------------------------
-# SYNCHRONIZED RE-RENDER IMAGE MATRIX DRAWING ENGINE
-# ----------------------------------------------------------------------
-if st.session_state.received_data:
-    try:
-        love_package = st.session_state.received_data
+try:
+    headers = {
+        'X-Master-Key': '$2b$10$w8bX1v0SshIcoZfeAepLxeBfK22vK9I6kF5H7wK6Fqgq1TzB9q8rS'
+    }
+    # Poll records from the matching public database endpoint securely
+    response = requests.get('https://jsonbin.io', headers=headers, timeout=5)
+    
+    if response.status_code == 200:
+        love_package = response.json().get("record", {})
+        
         user_name = love_package.get("name", "Babe")
         user_email = love_package.get("email", "Not Provided")
         user_place = love_package.get("place", "Not Provided")
         secret_note = love_package.get("note", "").strip()
         current_msg_time = love_package.get("timestamp", None)
-
+        
         if secret_note:
             status_message.markdown("<h3 style='color: #f30477;'>✨ She Sent a Message! Card Decoded Successfully! ✨</h3>", unsafe_allow_html=True)
             
@@ -107,8 +66,11 @@ if st.session_state.received_data:
                 card_img = Image.new("RGBA", (1080, 1080), "#fff0f7")
             
             draw = ImageDraw.Draw(card_img)
+            
+            # 1. Heading prints at exactly 30px height centered at 200px from top
             draw.text((540, 200), "💖 Our Anniversary Note 💖", fill="#f30477", anchor="mt")
 
+            # 2. Message wraps at 24px width within 100px margins (Justified design grid blocks)
             left_margin = 100
             max_content_width = 1080 - left_margin - 100 
             y_position = 290 
@@ -149,6 +111,7 @@ if st.session_state.received_data:
                             
                 y_position += line_height
 
+            # 3. Personal data points stack line-by-line centrally right below her text box block at 20px
             details_y = y_position + 60
             line_gap = 38
             draw.text((540, details_y), f"👤 Name: {user_name}", fill="#f30477", anchor="mm")
@@ -167,14 +130,16 @@ if st.session_state.received_data:
                 mime="image/png"
             )
             
-            if current_msg_time != st.session_state.last_processed_time:
-                st.session_state.last_processed_time = current_msg_time
+            # Fire balloon burst animations once upon fresh arrival tracking identification keys
+            if current_msg_time != st.session_state.last_time:
+                st.session_state.last_time = current_msg_time
                 st.balloons()
+                
+        else:
+            status_message.info("👋 Keeping cloud sync live... Waiting for her input. Do not close this window! 💓")
+except Exception as e:
+    status_message.info("👋 Syncing with the cloud pipeline... Keeping dashboard lookup active. ✨")
 
-    except Exception as e:
-        status_message.error(f"Error compiling canvas layers: {e}")
-else:
-    status_message.info("👋 Listening to local port 5000... Waiting for her to click Send Note! 💓")
-
-time.sleep(1)
+# Keep the cloud app interface refresh cycle ticking every 2 seconds automatically
+time.sleep(2)
 st.rerun()
