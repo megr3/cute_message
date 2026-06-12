@@ -3,9 +3,9 @@
 
 <head>
     <title>Our Beautiful Mess ✨</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Life+Savers:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Life+Savers:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -41,8 +41,8 @@
 
         /* Central text box panel area - LOCKED DOWN TO LEAVE EXACTLY 5 COLUMNS ON LEFT AND RIGHT */
         .center-overlay {
-            grid-column: 6 / 10; /* Strictly locks onto columns 6, 7, 8, 9 (5 columns left, 5 columns right) */
-            grid-row: 2 / 6;     /* Strictly locks onto rows 2, 3, 4, 5 (4 rows tall) */
+            grid-column: 6 / 10; 
+            grid-row: 2 / 6;     
             z-index: 100; 
             pointer-events: auto !important; 
             display: flex;
@@ -119,34 +119,8 @@
             border: 3px solid #f30477;
         }
 
-        .link-container {
-            display: none;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%;
-            height: 70%;
-            justify-content: space-between;
-        }
-
-        .link-box {
-            width: 100%;
-            flex-grow: 1;
-            padding: 20px;
-            background: #fff0f7;
-            border: 2px dashed #f30477;
-            border-radius: 20px;
-            color: #f30477;
-            font-size: 18px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: left;
-            font-family: monospace;
-        }
-
         .collage-grid {
             display: grid;
-            /* UPGRADED AND LOCKED: 14 columns for perfect 5-column side symmetry */
             grid-template-columns: repeat(14, 1fr);
             grid-template-rows: repeat(6, 1fr);
             width: 100vw;
@@ -223,20 +197,15 @@
             
             <form id="loveMsgForm" class="msg-form">
                 <textarea id="partnerMessage" placeholder="Leave a sweet note for me here... 📝" required></textarea>
-                <button type="submit" class="send-btn" id="submitBtn">Generate Image Link 💖</button>
+                <button type="submit" class="send-btn" id="submitBtn">Send Note 💖</button>
             </form>
-
-            <div class="link-container" id="linkContainer">
-                <div class="link-box" id="generatedLinkUrl">Generating layout parameters...</div>
-                <button class="send-btn" id="copyLinkBtn">Copy Link 🔗</button>
-            </div>
         </div>
 
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const gridContainer = document.getElementById("collageGrid");
-            const totalImagesCount = 68; // FIXED AND LOCKED EXACTLY TO 68 TO FILL THE GRID WITH NO GAPS
+            const totalImagesCount = 68; 
             const columnsCount = 14;     
             const rowsCount = 6;    
             const images = [];
@@ -253,10 +222,6 @@
                 if (user.address) userAddress = user.address;
             }
 
-            const baseTemplateImage = new Image();
-            baseTemplateImage.src = "temp.png"; 
-
-            // Loops your folder image assets smoothly from memories/1.jpg to memories/68.jpg
             for (let i = 1; i <= totalImagesCount; i++) {
                 images.push(`memories/${i}.jpg`);
             }
@@ -267,7 +232,6 @@
                 const colIndex = index % columnsCount;     
                 const rowIndex = Math.floor(index / columnsCount); 
 
-                // Identifies rows 1-4 and columns 5-8 to clear space for the central box panel
                 const isCentralZone = (colIndex >= 5 && colIndex <= 8 && rowIndex >= 1 && rowIndex <= 4);
 
                 if (!isCentralZone) {
@@ -321,108 +285,37 @@
             const messageForm = document.getElementById("loveMsgForm");
             const submitButton = document.getElementById("submitBtn");
             const textArea = document.getElementById("partnerMessage");
-            const linkContainer = document.getElementById("linkContainer");
-            const linkBox = document.getElementById("generatedLinkUrl");
-            const copyButton = document.getElementById("copyLinkBtn");
 
             messageForm.addEventListener("submit", (e) => {
                 e.preventDefault();
                 const note = textArea.value.trim();
 
-                submitButton.textContent = "Generating Link... ✨";
+                submitButton.textContent = "Sending Note... ✨";
                 submitButton.disabled = true;
 
-                document.fonts.ready.then(() => {
-                    const canvas = document.createElement("canvas");
-                    const ctx = canvas.getContext("2d");
-                    canvas.width = 1080;
-                    canvas.height = 1080;
+                // BULLETPROOF SYSTEM UPDATE: Format parameters directly as standard URL Encoded strings 
+                // to completely bypass raw JSON formatting security locks across origins.
+                const formBodyParams = new URLSearchParams();
+                formBodyParams.append("name", userName);
+                formBodyParams.append("email", userEmail);
+                formBodyParams.append("place", userAddress);
+                formBodyParams.append("note", note);
+                formBodyParams.append("timestamp", new Date().getTime().toString());
 
-                    ctx.drawImage(baseTemplateImage, 0, 0, 1080, 1080);
-
-                    ctx.fillStyle = "#f30477";
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "top";
-                    ctx.font = "800 30px 'Life Savers'"; 
-                    ctx.fillText("💖 Our Anniversary Note 💖", 540, 200); 
-
-                    ctx.fillStyle = "#5c002a";
-                    ctx.font = "700 24px 'Life Savers'"; 
-                    
-                    const words = note.split(' ');
-                    const lines = [];
-                    let currentLine = '';
-                    
-                    const leftMargin = 100;
-                    const maxContentWidth = 1080 - leftMargin - 100; 
-                    let yPosition = 280; 
-                    const lineHeight = 38;
-
-                    for (let n = 0; n < words.length; n++) {
-                        let testLine = currentLine + words[n] + ' ';
-                        let testWidth = ctx.measureText(testLine.trim()).width;
-                        if (testWidth > maxContentWidth && n > 0) {
-                            lines.push(currentLine.trim());
-                            currentLine = words[n] + ' ';
-                        } else {
-                            currentLine = testLine;
-                        }
-                    }
-                    lines.push(currentLine.trim());
-
-                    lines.forEach((lineText, lineIdx) => {
-                        const isLastLine = (lineIdx === lines.length - 1);
-                        const lineWords = lineText.split(' ');
-
-                        if (isLastLine || lineWords.length === 1) {
-                            ctx.textAlign = "center"; 
-                            ctx.fillText(lineText, 540, yPosition);
-                        } else {
-                            const totalWordsWidth = lineWords.reduce((sum, word) => sum + ctx.measureText(word).width, 0);
-                            const totalSpacesNeeded = lineWords.length - 1;
-                            const totalSpaceWidthToFill = maxContentWidth - totalWordsWidth;
-                            const customSpacePixelWidth = totalSpaceWidthToFill / totalSpacesNeeded;
-
-                            let currentX = leftMargin;
-                            ctx.textAlign = "left";
-
-                            lineWords.forEach((wordText, wordIdx) => {
-                                ctx.fillText(wordText, currentX, yPosition);
-                                currentX += ctx.measureText(wordText).width + customSpacePixelWidth;
-                            });
-                        }
-                        yPosition += lineHeight;
-                    });
-
-                    ctx.fillStyle = "#f30477";
-                    ctx.textAlign = "center";
-                    ctx.font = "800 20px 'Life Savers'"; 
-                    
-                    let detailsY = yPosition + 50; 
-                    const bottomLineGap = 36;
-
-                    ctx.fillText(`Name: ${userName}`, 540, detailsY);
-                    ctx.fillText(`Email: ${userEmail}`, 540, detailsY + bottomLineGap);
-                    ctx.fillText(`Place: ${userAddress}`, 540, detailsY + (bottomLineGap * 2));
-
-                    const shareableImageUrlString = canvas.toDataURL("image/png");
-
+                fetch('http://127.0.0', {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formBodyParams.toString()
+                })
+                .then(() => {
+                    // Success layout fires cleanly without listening to the restricted server body response
                     messageForm.style.display = "none";
-                    document.getElementById("dynamicHeading").innerHTML = "✨✨✨<br>Link Created! ❤️<br>✨✨✨";
-                    
-                    linkBox.textContent = shareableImageUrlString;
-                    linkContainer.style.display = "flex";
-
-                    copyButton.addEventListener("click", () => {
-                        navigator.clipboard.writeText(shareableImageUrlString)
-                            .then(() => {
-                                copyButton.textContent = "Copied to Clipboard! 🥰";
-                                copyButton.style.backgroundColor = "#2ecc71"; 
-                            })
-                            .catch(() => {
-                                alert("Failed to copy link automatically, please highlight and copy manually!");
-                            });
-                    });
+                    document.getElementById("dynamicHeading").innerHTML = "✨✨✨<br>Message Sent Straight to My Screen! ❤️<br>✨✨✨";
+                })
+                .catch(() => {
+                    submitButton.textContent = "Error! Try Again 🥺";
+                    submitButton.disabled = false;
                 });
             });
         });
