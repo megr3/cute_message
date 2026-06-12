@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Surprise For My Love!!! ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Life+Savers:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Life Savers", serif;
+            font-weight: 800;
+            color: #f30477; 
+            text-align: center;
+        }
+        .life-savers-regular {
+          font-family: "Life Savers", serif;
+          font-weight: 400;
+          font-style: normal;
+        }
+        .life-savers-bold {
+          font-family: "Life Savers", serif;
+          font-weight: 700;
+          font-style: normal;
+        }
+        .life-savers-extrabold {
+          font-family: "Life Savers", serif;
+          font-weight: 800;
+          font-style: normal;
+        }
+        body {
+            background-color: #ffffff;
+            margin: 0; 
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: flex-start;
+            width: 100%;
+            overflow-x: hidden; 
+        }
+        h1 { 
+            font-family: "Life Savers", serif;
+            font-weight: 800; 
+            font-size: 60px;
+            text-shadow: 10px 5px 15px rgba(144, 0, 70, 0.12);
+            margin: 0 auto 40px auto;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+        /* Grid setup to create 2 rows with 3 equal columns */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, auto);
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px; 
+            margin: 0 auto; 
+        }
+        /* 3D Flip Card Container Constraints */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 340px; /* Height to accommodate image and text perfectly */
+            perspective: 1000px; /* Activates 3D workspace engine */
+            cursor: pointer;
+        }
+        /* The inner flippable box structural layer */
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            box-shadow: 10px 10px 25px rgba(144, 0, 70, 0.08);
+            border-radius: 25px;
+        }
+        /* Active rotation toggle applied dynamically via Javascript */
+        .flip-card.is-flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        /* Common Front & Back Side Structural Parameters */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Fixes rendering flickers */
+            backface-visibility: hidden;
+            border-radius: 25px;
+            border: 2px solid #f30477;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Solid-color Front Side Layout */
+        .card-front {
+            background-color: #f30477; /* Your custom solid accent brand pink */
+        }
+        .card-front p {
+            font-size: 32px;
+            color: #ffdff2; /* Beautiful contrasting light-pink text color */
+            margin: 0;
+        }
+        /* Surprise Content Back Side Layout */
+        .card-back {
+            background-color: #fff0f7;
+            transform: rotateY(180deg); /* Pre-rotates the hidden surface */
+        }
+        .card-back img {
+            width: 100%;
+            max-width: 250px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        .card-back p {
+            font-size: 24px;
+            margin: 0;
+            color: #f30477;
+        }
+        .slow-reveal {
+          opacity: 0; 
+          animation: fadeIn 2s ease-in-out forwards; 
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .flip-card-inner img, .grid-item img {
+            width: 100%;
+            max-width: 250px;
+            height: 200px;
+            object-fit: contain; /* <-- CHANGED: Fits entire image without cropping */
+            background-color: #ffffff; /* <-- OPTIONAL: Fills empty space with a clean background */
+            border-radius: 15px;
+            
+            margin-bottom: 15px;
+        }
+        .card-back img, .grid-item img {
+            width: 100%;
+            max-width: 250px;
+            height: 200px;
+            object-fit: contain; /* <-- CHANGED: Fits entire image without cropping */
+            border-radius: 15px;
+            
+            margin-bottom: 15px;
+        }
+        .card-back img, .grid-item img {
+            width: 100%;
+            max-width: 250px;
+            height: 200px;
+            object-fit: contain;
+            background-color: transparent; /* <-- CHANGED: Removes the white background space */
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        button{
+            margin-top: 40px;
+            width: 700px;
+            height: 70px;
+            border-radius: 20px;
+            background-color: rgb(243, 4, 119);
+            color: #ffdff2;
+            border: none;
+            box-shadow: 20px 20px 30px rgba(144, 0, 70, 0.185);
+            font-size: 40px;
+            cursor: pointer;
+        }
+        button:hover{
+            background-color: #ffdff2 ;
+            color:  rgb(243, 4, 119);
+            box-shadow: 20px 20px 20px rgba(144, 0, 70, 0.342);
+            border: 2px solid #f30477;
+        }
+    </style>
+</head>
+
+<body class="slow-reveal">
+
+    <!-- The custom dynamic greeting header -->
+    <h1 id="loveGreeting">My Sweet Sweet Kutty Kutty Loading...</h1>
+
+    <!-- 2 Rows x 3 Columns Layout Area -->
+    <div class="grid-container">
+        
+        <!-- Row 1: Item 1 -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="card-front">
+                    <p>Click Me</p>
+                </div>
+                <div class="card-back">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bWxoa2QxZDlkZHB6eGc4dnYzemdsejBpaWVqOTRma2c3Mm95ZHo1MSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4VyInyFSBf5Tplvi1t/giphy.gif" alt="Surprise 3">
+                    <p>Soooooooooo many Hugs and Kisses for you Cutieee 💖</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 1: Item 2 -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="card-front">
+                    <p>Click Me</p>
+                </div>
+                <div class="card-back">
+                    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwZXBjYnJjdDg2dWNuaHp2Y2Nvc3NheWRtejc3bWR1MHVrOGZhNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/6C5LFuLcnhTZeypW0E/giphy.gif" alt="Surprise 2">
+                    <p>Brought you some Noice Roses 🌹</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 1: Item 3 -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="card-front">
+                    <p>Click Me</p>
+                </div>
+                <div class="card-back">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3Nmt1aGR1Z2diZTViYW1zMmZ0c2I5ODJrbHJvOHU2bThwbHk3Y2lpdCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/bkNa5EdzSUHvlttGEh/giphy.gif" alt="Surprise 3">
+                    <p>For the Times you Ragebaited me 👊</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Item 1 -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="card-front">
+                    <p>Click Me</p>
+                </div>
+                <div class="card-back">
+                    <img src="https://i.imgflip.com/7x5ieb.jpg" alt="Surprise 4">
+                    <p>You are my Sweet Strong Boiiiiiiii 💪</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Item 2 -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="card-front">
+                    <p>Click Me</p>
+                </div>
+                <div class="card-back">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bjBsem43N2NxMTJwcm0zbWc3dGhoYW13bWU4MWZ1YnFnemRvM2hodiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/26BRE9V0EC0mTXn7q/giphy.gif" alt="Surprise 5">
+                    <p>Hope you love me as much as your most favorite food 😋</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Item 3 -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="card-front">
+                    <p>Click Me</p>
+                </div>
+                <div class="card-back">
+                    <img src="sun.png" alt="Surprise 6">
+                    <p style="font-size: 16px;">You are my sunshine, My only sunshineYou make me happy, When skies are gray ☀️</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <a href="cheers.html"><button>Next</button></a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Read string package value inside local storage cache registry
+            const rawData = localStorage.getItem("anniversaryUserData");
+
+            if (rawData) {
+                const user = JSON.parse(rawData);
+                
+                // Extract and format the partner name directly into the H1 target path
+                if (user.name) {
+                    document.getElementById("loveGreeting").textContent = `My Sweet Sweet Kutty Kutty ${user.name}`;
+                }
+            } else {
+                // Fallback default signature if data isn't loaded right away
+                document.getElementById("loveGreeting").textContent = "My Sweet Sweet Kutty Kutty Babe";
+            }
+
+            // Bind click event triggers to all cards to handle flip-state switching toggles
+            const cards = document.querySelectorAll('.flip-card');
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    card.classList.toggle('is-flipped');
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

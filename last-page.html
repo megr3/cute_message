@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Our Beautiful Mess ✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Life+Savers:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Life Savers", serif;
+            font-weight: 800;
+            color: #f30477; 
+            text-align: center;
+        }
+        .life-savers-regular {
+          font-family: "Life Savers", serif;
+          font-weight: 400;
+          font-style: normal;
+        }
+        .life-savers-bold {
+          font-family: "Life Savers", serif;
+          font-weight: 700;
+          font-style: normal;
+        }
+        .life-savers-extrabold {
+          font-family: "Life Savers", serif;
+          font-weight: 800;
+          font-style: normal;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Central text box panel area - LOCKED DOWN TO LEAVE EXACTLY 5 COLUMNS ON LEFT AND RIGHT */
+        .center-overlay {
+            grid-column: 6 / 10; /* Strictly locks onto columns 6, 7, 8, 9 (5 columns left, 5 columns right) */
+            grid-row: 2 / 6;     /* Strictly locks onto rows 2, 3, 4, 5 (4 rows tall) */
+            z-index: 100; 
+            pointer-events: auto !important; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly; 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 40px;
+            padding-top: 15px;
+            border: 3px solid rgba(243, 4, 119, 0.3);
+            box-shadow: 0 20px 40px rgba(144, 0, 70, 0.15);
+            width: 100%;
+            height: 100%;
+        }
+
+        h1 {
+            font-size: 2vw; 
+            color: #f30477;
+            text-align: center;
+            text-shadow: 5px 5px 15px rgba(144, 0, 70, 0.2);
+            width: 100%;
+            line-height: 1.2;
+        }
+
+        .msg-form {
+            width: 100%;
+            height: 70%; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            flex-grow: 1; 
+            border-radius: 20px;
+            border: 3px solid #f30477;
+            background: #ffffff;
+            color: #f30477;
+            font-size: 21px; 
+            padding: 10px;
+            resize: none;
+            outline: none;
+            font-weight: 700;
+            transition: box-shadow 0.2s ease;
+        }
+
+        textarea::placeholder {
+            color: #f304776c;
+        }
+
+        textarea:focus {
+            box-shadow: 0 0 15px rgba(243, 4, 119, 0.35);
+        }
+
+        .send-btn {
+            width: 100%;
+            height: 60px; 
+            border-radius: 21px;
+            background-color: rgb(243, 4, 119);
+            color: #ffdff2;
+            font-size: 20px; 
+            border: none;
+            cursor: pointer; 
+            box-shadow: 0 8px 20px rgba(144, 0, 70, 0.2);
+            transition: all 0.2s ease;
+            font-weight: 800;
+        }
+
+        .send-btn:hover {
+            background-color: #ffdff2;
+            color: rgb(243, 4, 119);
+            border: 3px solid #f30477;
+        }
+
+        .link-container {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            height: 70%;
+            justify-content: space-between;
+        }
+
+        .link-box {
+            width: 100%;
+            flex-grow: 1;
+            padding: 20px;
+            background: #fff0f7;
+            border: 2px dashed #f30477;
+            border-radius: 20px;
+            color: #f30477;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: left;
+            font-family: monospace;
+        }
+
+        .collage-grid {
+            display: grid;
+            /* UPGRADED AND LOCKED: 14 columns for perfect 5-column side symmetry */
+            grid-template-columns: repeat(14, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            width: 100vw;
+            height: 100vh;
+            gap: 0;
+            place-items: stretch;
+            margin: 0 auto;
+        }
+
+        .collage-item {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .collage-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        box-shadow 0.4s ease, 
+                        border-radius 0.3s ease, 
+                        object-fit 0.3s ease,
+                        transform-origin 0.3s ease,
+                        opacity 0.3s ease;
+            z-index: 1;
+            transform-origin: center center; 
+            opacity: 0.55; 
+        }
+
+        .collage-item img:hover {
+            transform: scale(2.5);
+            object-fit: contain;
+            background-color: #fff0f7;
+            border: 2px solid #f30477;
+            z-index: 9999999999 !important; 
+            box-shadow: 0 25px 60px rgba(144, 0, 70, 0.6);
+            border-radius: 12px;
+            opacity: 1; 
+        }
+
+        .collage-item img.origin-top { transform-origin: top center; }
+        .collage-item img.origin-bottom { transform-origin: bottom center; }
+        .collage-item img.origin-left { transform-origin: center left; }
+        .collage-item img.origin-right { transform-origin: center right; }
+        .collage-item img.origin-top-left { transform-origin: top left; }
+        .collage-item img.origin-top-right { transform-origin: top right; }
+        .collage-item img.origin-bottom-left { transform-origin: bottom left; }
+        .collage-item img.origin-bottom-right { transform-origin: bottom right; }
+
+        .slow-reveal {
+            opacity: 0;
+            animation: fadeIn 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body class="slow-reveal">
+
+    <div class="collage-grid" id="collageGrid">
+        
+        <div class="center-overlay" id="formCard">
+            <h1 id="dynamicHeading">✨✨✨<br>I Love you Sooooooo Much My Cute Sweet Lovely Boiiii<br>✨✨✨</h1>
+            
+            <form id="loveMsgForm" class="msg-form">
+                <textarea id="partnerMessage" placeholder="Leave a sweet note for me here... 📝" required></textarea>
+                <button type="submit" class="send-btn" id="submitBtn">Generate Image Link 💖</button>
+            </form>
+
+            <div class="link-container" id="linkContainer">
+                <div class="link-box" id="generatedLinkUrl">Generating layout parameters...</div>
+                <button class="send-btn" id="copyLinkBtn">Copy Link 🔗</button>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const gridContainer = document.getElementById("collageGrid");
+            const totalImagesCount = 68; // FIXED AND LOCKED EXACTLY TO 68 TO FILL THE GRID WITH NO GAPS
+            const columnsCount = 14;     
+            const rowsCount = 6;    
+            const images = [];
+            
+            const rawData = localStorage.getItem("anniversaryUserData");
+            let userEmail = "Not Provided";
+            let userName = "Babe";
+            let userAddress = "Not Provided";
+
+            if (rawData) {
+                const user = JSON.parse(rawData);
+                if (user.name) userName = user.name;
+                if (user.email) userEmail = user.email;
+                if (user.address) userAddress = user.address;
+            }
+
+            const baseTemplateImage = new Image();
+            baseTemplateImage.src = "temp.png"; 
+
+            // Loops your folder image assets smoothly from memories/1.jpg to memories/68.jpg
+            for (let i = 1; i <= totalImagesCount; i++) {
+                images.push(`memories/${i}.jpg`);
+            }
+
+            const totalGridCells = columnsCount * rowsCount;
+            
+            for (let index = 0; index < totalGridCells; index++) {
+                const colIndex = index % columnsCount;     
+                const rowIndex = Math.floor(index / columnsCount); 
+
+                // Identifies rows 1-4 and columns 5-8 to clear space for the central box panel
+                const isCentralZone = (colIndex >= 5 && colIndex <= 8 && rowIndex >= 1 && rowIndex <= 4);
+
+                if (!isCentralZone) {
+                    const itemWrapper = document.createElement("div");
+                    itemWrapper.classList.add("collage-item");
+
+                    itemWrapper.style.gridColumnStart = colIndex + 1;
+                    itemWrapper.style.gridRowStart = rowIndex + 1;
+
+                    const currentImgSrc = images.shift();
+
+                    if (currentImgSrc) {
+                        const img = document.createElement("img");
+                        img.src = currentImgSrc; 
+                        img.alt = "Anniversary Memory";
+
+                        let originY = "center";
+                        let originX = "center";
+
+                        if (rowIndex === 0) originY = "top";
+                        if (rowIndex === rowsCount - 1) originY = "bottom";
+
+                        if (colIndex === 0) originX = "left";
+                        if (colIndex === columnsCount - 1) originX = "right";
+
+                        if (originY !== "center" || originX !== "center") {
+                            let className = "origin-";
+                            if (originY !== "center" && originX !== "center") {
+                                className += `${originY}-${originX}`;
+                            } else {
+                                className += originY !== "center" ? originY : originX;
+                            }
+                            img.classList.add(className);
+                        }
+                        
+                        img.onerror = () => {
+                            itemWrapper.style.background = "#fff0f7";
+                            img.remove();
+                        };
+
+                        itemWrapper.appendChild(img);
+                    } else {
+                        itemWrapper.style.background = "#fff0f7";
+                        itemWrapper.style.border = "1px solid rgba(243, 4, 119, 0.05)";
+                    }
+                    
+                    gridContainer.appendChild(itemWrapper);
+                }
+            }
+
+            const messageForm = document.getElementById("loveMsgForm");
+            const submitButton = document.getElementById("submitBtn");
+            const textArea = document.getElementById("partnerMessage");
+            const linkContainer = document.getElementById("linkContainer");
+            const linkBox = document.getElementById("generatedLinkUrl");
+            const copyButton = document.getElementById("copyLinkBtn");
+
+            messageForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const note = textArea.value.trim();
+
+                submitButton.textContent = "Generating Link... ✨";
+                submitButton.disabled = true;
+
+                document.fonts.ready.then(() => {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+                    canvas.width = 1080;
+                    canvas.height = 1080;
+
+                    ctx.drawImage(baseTemplateImage, 0, 0, 1080, 1080);
+
+                    ctx.fillStyle = "#f30477";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "top";
+                    ctx.font = "800 30px 'Life Savers'"; 
+                    ctx.fillText("💖 Our Anniversary Note 💖", 540, 200); 
+
+                    ctx.fillStyle = "#5c002a";
+                    ctx.font = "700 24px 'Life Savers'"; 
+                    
+                    const words = note.split(' ');
+                    const lines = [];
+                    let currentLine = '';
+                    
+                    const leftMargin = 100;
+                    const maxContentWidth = 1080 - leftMargin - 100; 
+                    let yPosition = 280; 
+                    const lineHeight = 38;
+
+                    for (let n = 0; n < words.length; n++) {
+                        let testLine = currentLine + words[n] + ' ';
+                        let testWidth = ctx.measureText(testLine.trim()).width;
+                        if (testWidth > maxContentWidth && n > 0) {
+                            lines.push(currentLine.trim());
+                            currentLine = words[n] + ' ';
+                        } else {
+                            currentLine = testLine;
+                        }
+                    }
+                    lines.push(currentLine.trim());
+
+                    lines.forEach((lineText, lineIdx) => {
+                        const isLastLine = (lineIdx === lines.length - 1);
+                        const lineWords = lineText.split(' ');
+
+                        if (isLastLine || lineWords.length === 1) {
+                            ctx.textAlign = "center"; 
+                            ctx.fillText(lineText, 540, yPosition);
+                        } else {
+                            const totalWordsWidth = lineWords.reduce((sum, word) => sum + ctx.measureText(word).width, 0);
+                            const totalSpacesNeeded = lineWords.length - 1;
+                            const totalSpaceWidthToFill = maxContentWidth - totalWordsWidth;
+                            const customSpacePixelWidth = totalSpaceWidthToFill / totalSpacesNeeded;
+
+                            let currentX = leftMargin;
+                            ctx.textAlign = "left";
+
+                            lineWords.forEach((wordText, wordIdx) => {
+                                ctx.fillText(wordText, currentX, yPosition);
+                                currentX += ctx.measureText(wordText).width + customSpacePixelWidth;
+                            });
+                        }
+                        yPosition += lineHeight;
+                    });
+
+                    ctx.fillStyle = "#f30477";
+                    ctx.textAlign = "center";
+                    ctx.font = "800 20px 'Life Savers'"; 
+                    
+                    let detailsY = yPosition + 50; 
+                    const bottomLineGap = 36;
+
+                    ctx.fillText(`Name: ${userName}`, 540, detailsY);
+                    ctx.fillText(`Email: ${userEmail}`, 540, detailsY + bottomLineGap);
+                    ctx.fillText(`Place: ${userAddress}`, 540, detailsY + (bottomLineGap * 2));
+
+                    const shareableImageUrlString = canvas.toDataURL("image/png");
+
+                    messageForm.style.display = "none";
+                    document.getElementById("dynamicHeading").innerHTML = "✨✨✨<br>Link Created! ❤️<br>✨✨✨";
+                    
+                    linkBox.textContent = shareableImageUrlString;
+                    linkContainer.style.display = "flex";
+
+                    copyButton.addEventListener("click", () => {
+                        navigator.clipboard.writeText(shareableImageUrlString)
+                            .then(() => {
+                                copyButton.textContent = "Copied to Clipboard! 🥰";
+                                copyButton.style.backgroundColor = "#2ecc71"; 
+                            })
+                            .catch(() => {
+                                alert("Failed to copy link automatically, please highlight and copy manually!");
+                            });
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Monthiversary Gift !!!!!HHEEHHEHEHEHE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Life+Savers:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Life Savers", serif;
+            font-weight: 800;
+            color: #f30477; 
+            text-align: center;
+        }
+        .life-savers-regular {
+          font-family: "Life Savers", serif;
+          font-weight: 400;
+          font-style: normal;
+        }
+        .life-savers-bold {
+          font-family: "Life Savers", serif;
+          font-weight: 700;
+          font-style: normal;
+        }
+        .life-savers-extrabold {
+          font-family: "Life Savers", serif;
+          font-weight: 800;
+          font-style: normal;
+        }
+        h1{ 
+            font-family: Life Savers;
+            font-weight: 800; 
+            font-size: 90px;
+            text-shadow: 20px 10px 20px rgba(144, 0, 70, 0.17);
+        }
+        .row{
+            width: 100%;
+        }
+        .column {
+          float: left;
+          width: 50%;
+        }
+        .row:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+        img{
+            width: 60%;
+            height: 450px;
+            border-radius: 20px;
+            box-shadow: 15px 15px 30px rgba(26, 0, 12, 0.267);
+            transition: all 0.3s ease-in-out;
+        }
+        .slow-reveal {
+          opacity: 0; 
+          animation: fadeIn 3s ease-in-out forwards; 
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        p{
+            font-size: 30px;
+            color: #f30477;
+        }
+        input{
+            display: block;
+            width: 90%;
+            margin: 20px auto;
+            height: 70px;
+            border-radius: 20px;
+            border: 2px solid #f30477;
+            background-color: #ffffff;
+            color: #f30477;
+            font-size: 30px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input::placeholder{
+            color: #f304776c;
+        }
+        input:focus{
+            outline: none;
+            border-color: #f30477bb;
+            box-shadow: 0 0 15px rgba(243, 4, 119, 0.3);
+        }
+        /* Custom visual cue for an empty error field */
+        input.empty-error {
+            border: 3px dashed #f30477;
+            background-color: #fff0f7;
+        }
+        button{
+            width: 90%;
+            height: 70px;
+            border-radius: 20px;
+            background-color: rgb(243, 4, 119);
+            color: #ffdff2;
+            border: none;
+            box-shadow: 20px 20px 30px rgba(144, 0, 70, 0.185);
+            font-size: 50px;
+            cursor: pointer;
+        }
+        button:hover{
+            background-color: #ffdff2 ;
+            color:  rgb(243, 4, 119);
+            box-shadow: 20px 20px 20px rgba(144, 0, 70, 0.342);
+            border: 2px solid #f30477;
+        }
+    </style>
+</head>
+
+<body class="slow-reveal">
+    <h1>Collecting your data</h1>
+    <div class="row">
+      <div class="column">
+        <!-- Kept your default initial image tag layout -->
+        <img id="statusGiphy" src="https://media3.giphy.com/media/v1.Y2lkPTdjMjAzMDdiMmoyb3N6dTBseng1dzZ2NWI2enJvYjNnYXNpYnRwZDk0OGRsYnMxOSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/901mxGLGQN2PyCQpoc/200.gif" class="slow-reveal" alt="image">
+      </div>
+      <div class="column col1">
+        <p id="messageText">!!!This is a Robbery!!!</p>
+        <form action="/submit-data" id="myForm" method="post">
+            <input type="text" name="name" placeholder="Enter Your Name Babe!!!">
+            <input type="email" name="email" placeholder="Enter Your Email Sweet Heart">
+            <input type="text" name="address" placeholder="Enter Your Address My Love">
+            <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputs = document.querySelectorAll('#myForm input');
+            const statusGiphy = document.getElementById("statusGiphy");
+            const messageText = document.getElementById("messageText");
+
+            // Static state GIFs
+            const GIF_DEFAULT = "https://media3.giphy.com/media/v1.Y2lkPTdjMjAzMDdiMmoyb3N6dTBseng1dzZ2NWI2enJvYjNnYXNpYnRwZDk0OGRsYnMxOSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/901mxGLGQN2PyCQpoc/200.gif";
+            const GIF_EMPTY_BLUR = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWdndjlndGU4eDhjOHp3b2wzNTJpb2NxYmtqajJsbjhzZ2xoazFyayZlcD12MV9naWZzX3NlYXJjaCZjdD1n/JEQk0DRBfPHSrdOpmo/giphy.gif";
+
+            // Unique typing GIFs mapped directly to each field's name attribute
+            const typingGifs = {
+                name: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExanN3bmM5Yjh3N2kzcG9hZzFlZXFoMHYxM3BtdHQ5Ymd1cHh0OW8zdiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/NXISPTBIPRo6of0rZx/giphy.gif",
+                email: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3amF2OWpzbTgxbTR4bzRjbnFvMG44bXZpa285am42bGwzcmVwMWVwMyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/kiWYCdjG34Q6iPH2jG/giphy.gif",
+                address: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjBtczRzcWFwbTI3MjFpaTR3bDVrNjdvbW1zaXhnMmEzb2I1Z3RiOCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/A4vOXX36kqIKY/giphy.gif"
+            };
+
+            // Custom text updates during typing focus
+            const customMessages = {
+                name: "Write your name babyyyyyyy...",
+                email: "Type out your sweet email heart...",
+                address: "Looking up where my love lives..."
+            };
+
+            inputs.forEach(input => {
+                const fieldName = input.getAttribute("name");
+
+                // Event 1: Element Focused
+                input.addEventListener("focus", () => {
+                    statusGiphy.src = typingGifs[fieldName] || GIF_DEFAULT;
+                    messageText.textContent = customMessages[fieldName] || "Waiting for you to type... ✨";
+                    input.classList.remove("empty-error");
+                });
+
+                // Event 2: Element Unfocused
+                input.addEventListener("blur", () => {
+                    if (input.value.trim() === "") {
+                        statusGiphy.src = GIF_EMPTY_BLUR;
+                        messageText.textContent = "Hey! Don't leave it blank blank! 😤";
+                        input.classList.add("empty-error");
+                    } else {
+                        statusGiphy.src = GIF_DEFAULT;
+                        messageText.textContent = "!!!This is a Robbery!!!";
+                        input.classList.remove("empty-error");
+                    }
+                });
+            });
+
+            // Prevent blank form submission handling and pack local storage data
+            document.getElementById("myForm").addEventListener("submit", (e) => {
+                e.preventDefault(); // Stop native submission to handle storage logic
+
+                let valid = true;
+                inputs.forEach(input => {
+                    if (input.value.trim() === "") {
+                        valid = false;
+                        input.classList.add("empty-error");
+                    }
+                });
+
+                if (!valid) {
+                    statusGiphy.src = GIF_EMPTY_BLUR;
+                    messageText.textContent = "Fill everything first, beautiful! 💖";
+                } else {
+                    // Extract form values cleanly
+                    const anniversaryData = {
+                        name: document.querySelector('input[name="name"]').value.trim(),
+                        email: document.querySelector('input[name="email"]').value.trim(),
+                        address: document.querySelector('input[name="address"]').value.trim()
+                    };
+
+                    // Save values inside localStorage memory key
+                    localStorage.setItem("anniversaryUserData", JSON.stringify(anniversaryData));
+
+                    // Route user smoothly to your secondary reveal file path
+                    window.location.href = "gift.html";
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
