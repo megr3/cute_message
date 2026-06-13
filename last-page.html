@@ -303,7 +303,7 @@
                 const encodedNote = encodeURIComponent(note);
 
                 // 🚀 THE DIRECT ROUTE: Instantly redirects her browser to your live Streamlit site with her message in the URL
-                window.location.href = `https://streamlit.app{encodedName}&email=${encodedEmail}&place=${encodedAddress}&note=${encodedNote}`;
+                window.location.href = `https://cutemessage.streamlit.app?name=${encodedName}&email=${encodedEmail}&place=${encodedAddress}&note=${encodedNote}`;
             });
         });
     </script>
