@@ -210,16 +210,20 @@
             const rowsCount = 6;    
             const images = [];
             
-            const rawData = localStorage.getItem("anniversaryUserData");
-            let userEmail = "Not Provided";
-            let userName = "Babe";
-            let userAddress = "Not Provided";
+            // FAIL-SAFE BACKUP ENGINE: Checks multiple common storage keys to ensure her name is captured
+            let userName = localStorage.getItem("name") || "Babe";
+            let userEmail = localStorage.getItem("email") || "Not Provided";
+            let userAddress = localStorage.getItem("address") || localStorage.getItem("place") || "Not Provided";
 
+            const rawData = localStorage.getItem("anniversaryUserData") || localStorage.getItem("userData");
             if (rawData) {
-                const user = JSON.parse(rawData);
-                if (user.name) userName = user.name;
-                if (user.email) userEmail = user.email;
-                if (user.address) userAddress = user.address;
+                try {
+                    const user = JSON.parse(rawData);
+                    if (user.name) userName = user.name;
+                    if (user.email) userEmail = user.email;
+                    if (user.address) userAddress = user.address;
+                    if (user.place) userAddress = user.place;
+                } catch(e) {}
             }
 
             for (let i = 1; i <= totalImagesCount; i++) {
@@ -290,38 +294,16 @@
                 e.preventDefault();
                 const note = textArea.value.trim();
 
-                submitButton.textContent = "Sending Note... ✨";
+                submitButton.textContent = "Opening Vault... ✨";
                 submitButton.disabled = true;
 
-                const lovePackage = {
-                    name: userName,
-                    email: userEmail,
-                    place: userAddress,
-                    note: note,
-                    timestamp: new Date().getTime().toString()
-                };
+                const encodedName = encodeURIComponent(userName);
+                const encodedEmail = encodeURIComponent(userEmail);
+                const encodedAddress = encodeURIComponent(userAddress);
+                const encodedNote = encodeURIComponent(note);
 
-                // Transmits the payload directly to your shared public JSONBin data block
-                fetch('https://jsonbin.io', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': '$2b$10$w8bX1v0SshIcoZfeAepLxeBfK22vK9I6kF5H7wK6Fqgq1TzB9q8rS'
-                    },
-                    body: JSON.stringify(lovePackage)
-                })
-                .then(response => {
-                    if (response.ok) {
-                        messageForm.style.display = "none";
-                        document.getElementById("dynamicHeading").innerHTML = "✨✨✨<br>Message Sent Straight to My Screen! ❤️<br>✨✨✨";
-                    } else {
-                        throw new Error();
-                    }
-                })
-                .catch(() => {
-                    submitButton.textContent = "Error! Try Again 🥺";
-                    submitButton.disabled = false;
-                });
+                // 🚀 THE DIRECT ROUTE: Instantly redirects her browser to your live Streamlit site with her message in the URL
+                window.location.href = `https://streamlit.app{encodedName}&email=${encodedEmail}&place=${encodedAddress}&note=${encodedNote}`;
             });
         });
     </script>

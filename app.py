@@ -2,15 +2,8 @@ import streamlit as st
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import os
-import requests
-import time
 
-# Configure core browser page window attributes
-st.set_page_config(
-    page_title="Live Love Letter Decoder 💖", 
-    page_icon="💌", 
-    layout="centered"
-)
+st.set_page_config(page_title="Love Letter Decoder 💖", page_icon="💌", layout="centered")
 
 st.markdown("""
     <style>
@@ -29,36 +22,27 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='color: #f30477;'>🔒 Live Decrypted Love Vault</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color: #f30477;'>🔒 Decrypted Love Vault</h1>", unsafe_allow_html=True)
 
 status_message = st.empty()
 image_placeholder = st.empty()
 download_placeholder = st.empty()
 
-if "last_time" not in st.session_state:
-    st.session_state.last_time = None
+if "balloon_fired" not in st.session_state:
+    st.session_state.balloon_fired = False
 
-# ----------------------------------------------------------------------
-# LIVE REAL-TIME CLOUD PIPELINE WATCH ENGINE
-# ----------------------------------------------------------------------
-try:
-    headers = {
-        'X-Master-Key': '$2b$10$w8bX1v0SshIcoZfeAepLxeBfK22vK9I6kF5H7wK6Fqgq1TzB9q8rS'
-    }
-    # Poll records from the matching public database endpoint securely
-    response = requests.get('https://jsonbin.io', headers=headers, timeout=5)
-    
-    if response.status_code == 200:
-        love_package = response.json().get("record", {})
-        
-        user_name = love_package.get("name", "Babe")
-        user_email = love_package.get("email", "Not Provided")
-        user_place = love_package.get("place", "Not Provided")
-        secret_note = love_package.get("note", "").strip()
-        current_msg_time = love_package.get("timestamp", None)
-        
+# Read url parameters directly from browser address bar
+query_params = st.query_params
+
+if "note" in query_params:
+    try:
+        user_name = query_params.get("name", "Babe")
+        user_email = query_params.get("email", "Not Provided")
+        user_place = query_params.get("place", "Not Provided")
+        secret_note = query_params.get("note", "").strip()
+
         if secret_note:
-            status_message.markdown("<h3 style='color: #f30477;'>✨ She Sent a Message! Card Decoded Successfully! ✨</h3>", unsafe_allow_html=True)
+            status_message.markdown("<h3 style='color: #f30477;'>✨ Card Decoded Successfully! ✨</h3>", unsafe_allow_html=True)
             
             if os.path.exists("temp.png"):
                 card_img = Image.open("temp.png").convert("RGBA")
@@ -66,11 +50,8 @@ try:
                 card_img = Image.new("RGBA", (1080, 1080), "#fff0f7")
             
             draw = ImageDraw.Draw(card_img)
-            
-            # 1. Heading prints at exactly 30px height centered at 200px from top
             draw.text((540, 200), "💖 Our Anniversary Note 💖", fill="#f30477", anchor="mt")
 
-            # 2. Message wraps at 24px width within 100px margins (Justified design grid blocks)
             left_margin = 100
             max_content_width = 1080 - left_margin - 100 
             y_position = 290 
@@ -111,12 +92,9 @@ try:
                             
                 y_position += line_height
 
-            # 3. Personal data points stack line-by-line centrally right below her text box block at 20px
-            details_y = y_position + 60
-            line_gap = 38
-            draw.text((540, details_y), f"👤 Name: {user_name}", fill="#f30477", anchor="mm")
-            draw.text((540, details_y + line_gap), f"📩 Email: {user_email}", fill="#f30477", anchor="mm")
-            draw.text((540, details_y + (line_gap * 2)), f"📍 Place: {user_place}", fill="#f30477", anchor="mm")
+            draw.text((540, y_position + 60), f"👤 Name: {user_name}", fill="#f30477", anchor="mm")
+            draw.text((540, y_position + 98), f"📩 Email: {user_email}", fill="#f30477", anchor="mm")
+            draw.text((540, y_position + 136), f"📍 Place: {user_place}", fill="#f30477", anchor="mm")
 
             image_placeholder.image(card_img, use_container_width=True)
 
@@ -130,16 +108,11 @@ try:
                 mime="image/png"
             )
             
-            # Fire balloon burst animations once upon fresh arrival tracking identification keys
-            if current_msg_time != st.session_state.last_time:
-                st.session_state.last_time = current_msg_time
+            if not st.session_state.balloon_fired:
+                st.session_state.balloon_fired = True
                 st.balloons()
-                
-        else:
-            status_message.info("👋 Keeping cloud sync live... Waiting for her input. Do not close this window! 💓")
-except Exception as e:
-    status_message.info("👋 Syncing with the cloud pipeline... Keeping dashboard lookup active. ✨")
 
-# Keep the cloud app interface refresh cycle ticking every 2 seconds automatically
-time.sleep(2)
-st.rerun()
+    except Exception as e:
+        status_message.error(f"Error compiling canvas layers: {e}")
+else:
+    st.info("👋 Security Vault Active... Type a note on your grid website to reveal the card! 💓")
