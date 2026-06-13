@@ -125,9 +125,9 @@
       <div class="column col1">
         <p id="messageText">!!!This is a Robbery!!!</p>
         <form action="/submit-data" id="myForm" method="post">
-            <input type="text" name="name" placeholder="Enter Your Name Babe!!!">
-            <input type="email" name="email" placeholder="Enter Your Email Sweet Heart">
-            <input type="text" name="address" placeholder="Enter Your Address My Love">
+            <input type="text" name="Sender_Name" placeholder="Enter Your Name Babe!!!">
+            <input type="text" name="Joke" placeholder="Tell me nice Joke Sweet Heart">
+            <input type="text" name="Receiver_Name" placeholder="Enter Your Darling's Name!!!">
             <button type="submit">Submit</button>
         </form>
       </div>
@@ -199,9 +199,9 @@
                 } else {
                     // Extract form values cleanly
                     const anniversaryData = {
-                        name: document.querySelector('input[name="name"]').value.trim(),
-                        email: document.querySelector('input[name="email"]').value.trim(),
-                        address: document.querySelector('input[name="address"]').value.trim()
+                        Sender_Name: document.querySelector('input[name="Sender_Name"]').value.trim(),
+                        Receiver_Name: document.querySelector('input[name="Receiver_Name"]').value.trim(),
+                        Joke: document.querySelector('input[name="Joke"]').value.trim()
                     };
 
                     // Save values inside localStorage memory key

@@ -283,7 +283,7 @@
                 const user = JSON.parse(rawData);
                 
                 // Extract and format the partner name directly into the H1 target path
-                if (user.name) {
+                if (user.Sender_Name) {
                     document.getElementById("loveGreeting").textContent = `My Sweet Sweet Kutty Kutty ${user.name}`;
                 }
             } else {

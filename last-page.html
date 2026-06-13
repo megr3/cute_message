@@ -211,18 +211,17 @@
             const images = [];
             
             // FAIL-SAFE BACKUP ENGINE: Checks multiple common storage keys to ensure her name is captured
-            let userName = localStorage.getItem("name") || "Babe";
-            let userEmail = localStorage.getItem("email") || "Not Provided";
-            let userAddress = localStorage.getItem("address") || localStorage.getItem("place") || "Not Provided";
+            let userName = localStorage.getItem("Receiver_Name") || "Babe";
+            let userJoke = localStorage.getItem("Joke") || "Not Provided";
+            let userReceiverName = localStorage.getItem("Receiver_Name") || localStorage.getItem("Receiver_Name") || "Not Provided";
 
             const rawData = localStorage.getItem("anniversaryUserData") || localStorage.getItem("userData");
             if (rawData) {
                 try {
                     const user = JSON.parse(rawData);
-                    if (user.name) userName = user.name;
-                    if (user.email) userEmail = user.email;
-                    if (user.address) userAddress = user.address;
-                    if (user.place) userAddress = user.place;
+                    if (user.Sender_Name) userName = user.Sender_Name;
+                    if (user.Receiver_Name) userReceiverName = user.Receiver_Name;
+                    if (user.Joke) userJoke = user.Joke;
                 } catch(e) {}
             }
 
@@ -298,12 +297,12 @@
                 submitButton.disabled = true;
 
                 const encodedName = encodeURIComponent(userName);
-                const encodedEmail = encodeURIComponent(userEmail);
-                const encodedAddress = encodeURIComponent(userAddress);
+                const encodedJoke = encodeURIComponent(userJoke);
+                const encodedAddress = encodeURIComponent(userReceiverName);
                 const encodedNote = encodeURIComponent(note);
 
                 // 🚀 THE DIRECT ROUTE: Instantly redirects her browser to your live Streamlit site with her message in the URL
-                window.location.href = `https://cutemessage.streamlit.app?name=${encodedName}&email=${encodedEmail}&place=${encodedAddress}&note=${encodedNote}`;
+                window.location.href = `https://cutemessage.streamlit.app?name=${encodedName}&joke=${encodedJoke}&place=${encodedAddress}&note=${encodedNote}`;
             });
         });
     </script>
